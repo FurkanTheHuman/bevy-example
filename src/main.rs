@@ -17,14 +17,14 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(LogDiagnosticsPlugin::default())
-        .add_plugin(InspectorPlugin::<Ball>::new())
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
-        .insert_resource(ClearColor(BACKGROUND_COLOR))
+        //.add_plugin(InspectorPlugin::<Ball>::new())
+        //.add_plugin(FrameTimeDiagnosticsPlugin::default())
+        //.insert_resource(ClearColor(BACKGROUND_COLOR))
         .insert_resource(PrintTimer(Timer::from_seconds(0.01, true)))
         .add_startup_system(setup)
-        .add_system(ball_movement_system)
-        .add_system(move_sticks)
-        .add_system(collision_management)
+        //.add_system(ball_movement_system) // causes walls and players to be disaapear
+        //.add_system(move_sticks)
+        //.add_system(collision_management)
         .add_system(bevy::input::system::exit_on_esc_system)
         .run();
 }
@@ -51,12 +51,7 @@ enum Collider {
     Score,
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-    asset_server: Res<AssetServer>,
-) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
     // commands.spawn_bundle(MaterialMesh2dBundle {
@@ -211,10 +206,9 @@ fn move_sticks(
 
 fn ball_movement_system(time: Res<Time>, mut query: Query<(&Ball, &mut Transform)>) {
     let delta_seconds = f32::min(0.2, time.delta_seconds());
-
-    for (ball, mut transform) in query.iter_mut() {
-        transform.translation += ball.velocity * delta_seconds
-    }
+    // for (ball, mut transform) in query.iter_mut() {
+    //     transform.translation += ball.velocity * delta_seconds
+    // }
 }
 
 fn collision_management(
